@@ -18,7 +18,7 @@ def neighbour_distance_matrix(nodes, faces):
 
     n = nodes.shape[0]
     H = np.zeros((n, n), dtype=np.float32)
-    for p1, p2, p3 in faces:
+    for p1, p2, p3 in np.nditer(faces, flags=['external_loop'], order='C'):
 
         if H[p1, p2] == 0:
             H[p1, p2] = distance(p1, p2)
@@ -77,7 +77,7 @@ def laplace_interpolator(mesh, measured, bad_channels, copy=False):
 
     bad_channels: np.ndarray, shape: (P, ), dtype=np.int32. Son los índices de los nodos a interpolar.
 
-    copy: bool. Si es True, retorna una nueva matriz, si es False, modifica "measured" en las files de los canales mal medidos.
+    copy: bool. Si es True, retorna una nueva matriz, si es False, modifica "measured" en las filas de los canales mal medidos.
 
     **Salida** Retorna una matriz no simétrica con valores nulos para los nodos no vecinos y valores no nulos entre nodos vecinos. Además, la diagonal es no nula.
 
