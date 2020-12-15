@@ -12,6 +12,7 @@ import sys
 sys.path.insert(0,PATH+'laplace_interpolator/src/') 
 from laplace_interpolator import laplace_interpolator
 
+# to know the data structure, see the docstring of laplace_interpolator
 interpolated = laplace_interpolator((nodes, faces), measured, bad_channels, copy=True)
 ```
 Please, if you use this fragment, contact me at scaracciolo@conicet.gov.ar
