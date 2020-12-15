@@ -1,17 +1,24 @@
 import numpy as np
 
-def neighbour_distance_matrix(nodes, faces):
+def neighbour_distance_matrix(nodes: np.ndarray, faces: np.ndarray) -> np.ndarray:
     """
-    Retorna la matriz de distancia para los nodos vecinos.
+    Retorna la matriz de distancia para los nodos vecinos. 
 
-    **Parámetros** Recibe los nodos y caras que conforman el mesh de una geometría.
+    Parámetros
+    ----------
 
-    nodes: np.ndarray, shape: (N, 3), dtype=np.float32 
-    faces: np.ndarray, shape: (M, 3), dtype=np.int32 
+    Recibe los nodos y caras que conforman el mesh de una geometría.
+
+    nodes : np.ndarray, shape: (N, 3), dtype=np.float32
+
+    faces : np.ndarray, shape: (M, 3), dtype=np.int32 
     
-    **Salida** Retorna una matriz simétrica con valores nulos para los nodos no vecinos y la distancia entre nodos vecinos. Además, la diagonal es nula.
+    Salida
+    ------
 
-    H: np.ndarray, shape: (N, N), dtype=np.float32 
+    Retorna una matriz simétrica con valores nulos para los nodos no vecinos y la distancia entre nodos vecinos. Además, la diagonal es nula.
+    
+    H : np.ndarray, shape: (N, N), dtype=np.float32 
 
     """
     distance = lambda x, y: np.linalg.norm(nodes[x]-nodes[y])
@@ -34,18 +41,25 @@ def neighbour_distance_matrix(nodes, faces):
         
     return H
 
-def laplace_operator(nodes, faces):
+def laplace_operator(nodes: np.ndarray, faces: np.ndarray) -> np.ndarray:
     """
     Retorna el operador de Laplace para una dada geometría. La construcción del operador se basa en la descripción de (1).
  
-    **Parámetros** Recibe los nodos y caras que conforman el mesh de una geometría.
-
-    nodes: np.ndarray, shape: (N, 3), dtype=np.float32 
-    faces: np.ndarray, shape: (M, 3), dtype=np.int32 
+    Parámetros
+    ----------
     
-    **Salida** Retorna una matriz no simétrica con valores nulos para los nodos no vecinos y valores no nulos entre nodos vecinos. Además, la diagonal es no nula.
+    Recibe los nodos y caras que conforman el mesh de una geometría.
 
-    L: np.ndarray, shape: (N, N), dtype=np.float32 
+    nodes : np.ndarray, shape: (N, 3), dtype=np.float32 
+
+    faces : np.ndarray, shape: (M, 3), dtype=np.int32 
+    
+    Salida
+    ------
+    
+    Retorna una matriz no simétrica con valores nulos para los nodos no vecinos y valores no nulos entre nodos vecinos. Además, la diagonal es no nula.
+
+    L : np.ndarray, shape: (N, N), dtype=np.float32 
     
     1. Oostendorp TF, van Oosterom A, Huiskamp G. Interpolation on a triangulated 3D surface. Journal of Computational Physics. 1989 Feb 1;80(2):331–43. 
     """
@@ -63,25 +77,33 @@ def laplace_operator(nodes, faces):
     
     return L
 
-def laplace_interpolator(mesh, measured, bad_channels, copy=False):
+def laplace_interpolator(mesh: tuple, measured: np.ndarray, bad_channels: np.ndarray, copy: bool = False) -> np.ndarray:
     """
     Retorna las mediciones interpoladas sobre la geometría utilizando el método B descripto en (1).
 
-    **Parámetros**
+    Parámetros
+    ----------
 
-    mesh: tuple (nodes, faces)
-        nodes: np.ndarray, shape: (N, 3), dtype=np.float32 
-        faces: np.ndarray, shape: (M, 3), dtype=np.int32 
+    mesh : tuple (nodes, faces)
+        nodes : np.ndarray, shape: (N, 3), dtype=np.float32 
+        faces : np.ndarray, shape: (M, 3), dtype=np.int32 
     
-    measured:  np.ndarray, shape: (N, T), dtype=np.float32. Son las mediciones de cada nodo a lo largo del tiempo.
+    measured : np.ndarray, shape: (N, T), dtype=np.float32.
+        Son las mediciones de cada nodo a lo largo del tiempo.
 
-    bad_channels: np.ndarray, shape: (P, ), dtype=np.int32. Son los índices de los nodos a interpolar.
+    bad_channels : np.ndarray, shape: (P, ), dtype=np.int32.
+        Son los índices de los nodos a interpolar.
 
-    copy: bool. Si es True, retorna una nueva matriz, si es False, modifica "measured" en las filas de los canales mal medidos.
+    copy: bool, opcional
+        Si es True, retorna una nueva matriz, si es False, modifica "measured" en las filas de los canales mal medidos.
 
-    **Salida** Retorna una matriz no simétrica con valores nulos para los nodos no vecinos y valores no nulos entre nodos vecinos. Además, la diagonal es no nula.
+    Salida
+    ------
 
-    interpolated: np.ndarray, shape: (N, T), dtype=np.float32. Son las mediciones de la variable "measured" con las señales de los canales malos interpoladas.
+    Retorna una matriz no simétrica con valores nulos para los nodos no vecinos y valores no nulos entre nodos vecinos. Además, la diagonal es no nula.
+
+    interpolated : np.ndarray, shape: (N, T), dtype=np.float32.
+        Son las mediciones de la variable "measured" con las señales de los canales malos interpoladas.
 
     1. Oostendorp TF, van Oosterom A, Huiskamp G. Interpolation on a triangulated 3D surface. Journal of Computational Physics. 1989 Feb 1;80(2):331–43. 
     """
