@@ -25,7 +25,7 @@ def neighbour_distance_matrix(nodes: np.ndarray, faces: np.ndarray) -> np.ndarra
 
     n = nodes.shape[0]
     H = np.zeros((n, n), dtype=np.float32)
-    for p1, p2, p3 in np.nditer(faces, flags=['external_loop'], order='C'):
+    for p1, p2, p3 in np.nditer(np.asfortranarray(faces), flags=['external_loop'], order='C'):
 
         if H[p1, p2] == 0:
             H[p1, p2] = distance(p1, p2)
