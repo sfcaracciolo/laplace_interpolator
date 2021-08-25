@@ -25,7 +25,7 @@ def neighbour_distance_matrix(nodes: np.ndarray, faces: np.ndarray) -> np.ndarra
 
     n = nodes.shape[0]
     H = np.zeros((n, n), dtype=np.float32)
-    for p1, p2, p3 in np.nditer(np.asfortranarray(faces), flags=['external_loop'], order='C'):
+    for p1, p2, p3 in faces:
 
         if H[p1, p2] == 0:
             H[p1, p2] = distance(p1, p2)
@@ -77,16 +77,16 @@ def laplace_operator(nodes: np.ndarray, faces: np.ndarray) -> np.ndarray:
     
     return L
 
-def laplace_interpolator(mesh: tuple, measured: np.ndarray, bad_channels: np.ndarray, copy: bool = False) -> np.ndarray:
+def laplace_interpolator(nodes: np.ndarray, faces: np.ndarray, measured: np.ndarray, bad_channels: np.ndarray, copy: bool = False) -> np.ndarray:
     """
     Retorna las mediciones interpoladas sobre la geometría utilizando el método B descripto en (1).
 
     Parámetros
     ----------
 
-    mesh : tuple (nodes, faces)
-        nodes : np.ndarray, shape: (N, 3), dtype=np.float32 
-        faces : np.ndarray, shape: (M, 3), dtype=np.int32 
+    nodes : np.ndarray, shape: (N, 3), dtype=np.float32 
+
+    faces : np.ndarray, shape: (M, 3), dtype=np.int32 
     
     measured : np.ndarray, shape: (N, T), dtype=np.float32.
         Son las mediciones de cada nodo a lo largo del tiempo.
@@ -108,7 +108,6 @@ def laplace_interpolator(mesh: tuple, measured: np.ndarray, bad_channels: np.nda
     1. Oostendorp TF, van Oosterom A, Huiskamp G. Interpolation on a triangulated 3D surface. Journal of Computational Physics. 1989 Feb 1;80(2):331–43. 
     """
 
-    nodes, faces = mesh
     L = laplace_operator(nodes, faces)
 
     channels = np.arange(L.shape[0], dtype=np.int32)
@@ -120,10 +119,8 @@ def laplace_interpolator(mesh: tuple, measured: np.ndarray, bad_channels: np.nda
     L22 = L[good_channels[:, np.newaxis], good_channels]
 
     f2 = np.delete(measured, bad_channels, axis=0)
-
     Y = -np.vstack((L12, L22))@f2
     A = np.vstack((L11, L21))
-
     f1 = np.linalg.inv(A.T@A)@A.T@Y
     
     if copy:
