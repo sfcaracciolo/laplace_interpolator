@@ -77,7 +77,7 @@ def laplace_operator(nodes: np.ndarray, faces: np.ndarray) -> np.ndarray:
     
     return L
 
-def laplace_interpolator(nodes: np.ndarray, faces: np.ndarray, measured: np.ndarray, bad_channels: np.ndarray, copy: bool = False) -> np.ndarray:
+def laplace_interpolation(nodes: np.ndarray, faces: np.ndarray, measured: np.ndarray, bad_channels: np.ndarray, copy: bool = False) -> np.ndarray:
     """
     Retorna las mediciones interpoladas sobre la geometría utilizando el método B descripto en (1).
 
