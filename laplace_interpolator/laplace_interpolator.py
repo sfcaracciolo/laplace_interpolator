@@ -77,7 +77,7 @@ def laplace_operator(nodes: np.ndarray, faces: np.ndarray) -> np.ndarray:
     
     return L
 
-def laplace_interpolation(nodes: np.ndarray, faces: np.ndarray, measured: np.ndarray, bad_channels: np.ndarray, copy: bool = False) -> np.ndarray:
+def laplace_interpolation(nodes: np.ndarray, faces: np.ndarray, measured: np.ndarray, bad_channels: np.ndarray, in_place: bool = False) -> np.ndarray:
     """
     Retorna las mediciones interpoladas sobre la geometría utilizando el método B descripto en (1).
 
@@ -94,8 +94,8 @@ def laplace_interpolation(nodes: np.ndarray, faces: np.ndarray, measured: np.nda
     bad_channels : np.ndarray, shape: (P, ), dtype=np.int32.
         Son los índices de los nodos a interpolar.
 
-    copy: bool, opcional
-        Si es True, retorna una nueva matriz, si es False, modifica "measured" en las filas de los canales mal medidos.
+    in_place: bool, opcional
+        Si es False, retorna una nueva matriz, si es True, modifica "measured" en las filas de los canales mal medidos.
 
     Salida
     ------
@@ -111,19 +111,19 @@ def laplace_interpolation(nodes: np.ndarray, faces: np.ndarray, measured: np.nda
     L = laplace_operator(nodes, faces)
 
     channels = np.arange(L.shape[0], dtype=np.int32)
-    good_channels = np.delete(channels, bad_channels)
+    good_channels = np.delete(channels, bad_channels) # [:, np.newaxis]
 
-    L11 = L[bad_channels[:, np.newaxis], bad_channels]
-    L12 = L[bad_channels[:, np.newaxis], good_channels]
-    L21 = L[good_channels[:, np.newaxis], bad_channels]
-    L22 = L[good_channels[:, np.newaxis], good_channels]
+    L11 = L[np.ix_(bad_channels, bad_channels)]
+    L12 = L[np.ix_(bad_channels, good_channels)]
+    L21 = L[np.ix_(good_channels, bad_channels)]
+    L22 = L[np.ix_(good_channels, good_channels)]
 
     f2 = np.delete(measured, bad_channels, axis=0)
     Y = -np.vstack((L12, L22))@f2
     A = np.vstack((L11, L21))
     f1 = np.linalg.inv(A.T@A)@A.T@Y
     
-    if copy:
+    if not in_place:
         interpolated = measured.copy()
         interpolated[bad_channels] = f1
     else:
