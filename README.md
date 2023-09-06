@@ -15,5 +15,5 @@ f_interp = laplace_interp(
 ```
 ### Examples
 Both figures show the $f$ at $\alpha$ nodes in solid line and the absolute error in dashed line. Each row is a example with different $f$ function. The boxplots represent the error distribution.
-<img src="figs/interp_a.png" alt="drawing" width=""/>
-<img src="figs/interp_b.png" alt="drawing" width=""/>
+<img src="figs/interp_a.png" alt="drawing" width="500"/>
+<img src="figs/interp_b.png" alt="drawing" width="500"/>
