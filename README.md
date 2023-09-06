@@ -1,6 +1,5 @@
 # Laplace Interpolator
 Laplace interpolator based on ["Interpolation on a triangulated 3D surface"](https://doi.org/10.1016/0021-9991(89)90103-4) paper written by Thom F. Oostendorp et al .
-
 ### Usage
 
 ```python
@@ -15,5 +14,7 @@ f_interp = laplace_interp(
 ```
 ### Examples
 Both figures show the $f$ at $\alpha$ nodes in solid line and the absolute error in dashed line. Each row is a example with different $f$ function. The boxplots represent the error distribution.
-<img src="/figs/interp_a.png" alt="drawing" width=""/>
-<img src="/figs/interp_b.png" alt="drawing" width=""/>
+
+<img src="figs/interp_a.png" alt="drawing" width="400"/>
+
+<img src="figs/interp_b.png" alt="drawing" width="400"/>
