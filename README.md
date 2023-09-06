@@ -1,18 +1,19 @@
-# laplace_interpolator
-Laplace interpolator based on "Interpolation on a triangulated 3D surface" paper written by Thom F. Oostendorp et al. The source code compute an interpolation of bad channels based on Laplace operator. The only dependece is Numpy and the implementation use broadcasting rules.
+# Laplace Interpolator
+Laplace interpolator based on ["Interpolation on a triangulated 3D surface"](https://doi.org/10.1016/0021-9991(89)90103-4) paper written by Thom F. Oostendorp et al .
 
-This code is used to ECGI (Electrocardiographic Imaging) research. Possibly some improvements/optimizations can be made using symmetric and sparse matrix structure in cases with geometries has several points but typical cases with 100 to 2000 nodes not requiere this optimizations.
-
-# Usage
-
-Clone the repository in some PATH and import it in your proyect as:
+### Usage
 
 ```python
-import sys
-sys.path.insert(0,PATH+'laplace_interpolator/src/') 
-from laplace_interpolator import laplace_interpolator
+from laplace_interpolator import laplace_interp
 
-# to know the data structure, see the docstring of laplace_interpolator
-interpolated = laplace_interpolator((nodes, faces), measured, bad_channels, copy=True)
+f_interp = laplace_interp(
+    f, # values on each vertex
+    α, # array of vertex indices where interpolate
+    L, # discrete laplace matrix. See https://github.com/sfcaracciolo/surface_laplacian
+    method='a' # can be a or b. See https://doi.org/10.1016/0021-9991(89)90103-4
+)
 ```
-Please, if you use this fragment, contact me at scaracciolo@conicet.gov.ar
+### Examples
+Both figures show the $f$ at $\alpha$ nodes in solid line and the absolute error in dashed line. Each row is a example with different $f$ function. The boxplots represent the error distribution.
+<img src="figs/interp_a.png" alt="drawing" width=""/>
+<img src="figs/interp_b.png" alt="drawing" width=""/>
